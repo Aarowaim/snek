@@ -141,17 +141,14 @@ class Snake(Entity):
     def draw(self, window):
         colors = [pygame.Color(c) for c in ['green', 'yellow', 'orange', 'red', 'violet', 'blue']]
         c_i = 0
-        if len(self.segments) > 1:
-            for i in range(len(self.segments) - 1):
-                if self.segments[i].distance_to(self.segments[i+1]) < 10:
-                    pygame.draw.line(
-                        window.get_surface(), 
-                        colors[c_i], 
-                        self.segments[i],
-                        self.segments[i+1],
-                        2
-                    )
-                c_i = (c_i + 1) % len(colors)
+        for i in range(len(self.segments) - 1):
+            pygame.draw.circle(
+                window.get_surface(), 
+                colors[c_i], 
+                [int(val) for val in self.segments[i]],
+                5
+            )
+            c_i = (c_i + 1) % len(colors)
                     
 
     def update(self, collisions=[]):
