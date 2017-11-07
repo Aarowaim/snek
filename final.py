@@ -109,6 +109,9 @@ class Game(object):
         if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
             self.close_clicked = True
 
+        if event.type == KEYUP and event.key == K_SPACE:
+            self.snake.theme_index += 1
+
         if self.continue_game:
             for e in self.entities:
                 e.handle(event)

@@ -109,18 +109,19 @@ class Food(Entity):
         self.position = Vector2(x, y)
 
     def draw(self, window, patterns=set()): 
-        self.draw_circle(window, *self.position)
+        self.draw_circle(window, *self.position, self.radius)
+        self.draw_circle(window, *self.position, self.radius - 1, Color('blue'))
 
-    def draw_circle(self, window, x, y):
+    def draw_circle(self, window, x, y, radius, color=Color('white')):
         pygame.draw.circle(
             window.get_surface(), 
-            Color('white'),
+            color,
             [int(val) for val in [x, y]],
-            self.radius
+            radius
         )
 
     def is_inside(self, vector_point):
-        return self.position.distance_to(vector_point) <= self.radius
+        return self.position.distance_to(vector_point) <= self.radius + 5
 
     def update(self, collisions=[]):
         pass
@@ -137,9 +138,29 @@ class Snake(Entity):
 
         self.max_length = 100
         self.segments = [self.position]
+        self.init_themes()
+
+    def init_themes(self):
+        mono = ['white']
+        basic = ['yellow']
+        poison = ['yellow', 'yellow', 'green', 'yellow', 'green', 'yellow']
+
+        rainbow = ['green', 'yellow', 'orange', 'red', 'violet', 'blue']
+        scarlet_king = ['red', 'red', 'red', 'red', 'red', 'black', 'black', 'yellow', 'yellow', 'yellow', 'black', 'black']
+        coral_snake = ['white', 'white', 'black', 'red', 'red', 'red', 'black']
+        sea_krait = ['white', 'black', 'black', 'white', 'white', 'white']
+        python = ['0x366E9D', '0x366E9D', '0x366E9D', '0xFFCE3E', '0xFFCE3E', '0xFFCE3E']
+
+        self.themes = [mono, basic, poison, python, sea_krait, coral_snake, scarlet_king, rainbow]
+        self.theme = mono
+
+        self.theme_timer = Timer()
+        self.theme_index = 0
+
 
     def draw(self, window):
-        colors = [pygame.Color(c) for c in ['green', 'yellow', 'orange', 'red', 'violet', 'blue']]
+
+        colors = [pygame.Color(c) for c in self.theme]
         c_i = 0
         for i in range(len(self.segments) - 1):
             pygame.draw.circle(
@@ -163,6 +184,12 @@ class Snake(Entity):
 
         if self.length() >= self.max_length:
             self.segments.pop()
+
+        if self.theme_timer.elapsed() > 20:
+            self.theme_index +=1 
+            self.theme_timer.consume(20)
+        self.theme_index %= len(self.themes)
+        self.theme = self.themes[self.theme_index]
 
         self.position += self.velocity
 
