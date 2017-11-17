@@ -66,14 +66,21 @@ class Game(object):
         self.window.update()
 
     def update(self):
-        # Update the counter to show how long the match has been
-        self.game_timer.update()
-        self.time_display.amount = round(self.game_timer.elapsed(), 1)
 
         for e in self.entities:
             e.update()
 
+        self.game_logic()
+
+    def game_logic(self):
+        # Update the counter to show how long the match has been
+        self.game_timer.update()
+        self.time_display.amount = round(self.game_timer.elapsed(), 1)
+
+        # increase snake's size when it eats food
         self.snake.max_length += self.eco.check_eaten(self.snake.head())
+
+        # update player's score
         self.score_display.amount = self.snake.length()
 
     def play(self):

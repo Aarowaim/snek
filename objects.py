@@ -85,7 +85,8 @@ class Ecosystem(Entity):
             point = self.randpoint()
             while (int(point.x), int(point.y)) in self.foods:
                 point = self.randpoint()
-            self.foods[(int(point.x), int(point.y))] = Food(point.x, point.y)
+            size = random.randint(4, 8)
+            self.foods[(int(point.x), int(point.y))] = Food(point.x, point.y, size)
 
     def randpoint(self):
         return Vector2(random.randint(0, self.limits.x), random.randint(0, self.limits.x))
@@ -229,6 +230,6 @@ class NumberDisplay(Entity):
         text = self.label + str(round(self.amount, 1))
         x_pos = self.position.x
         if self.center:
-            x_pos = self.position.x - window.__font__.size(text)[0] / 2
+            x_pos = self.position.x - window.get_string_width(text) / 2
 
         window.draw_string(text, x_pos, self.position.y)
